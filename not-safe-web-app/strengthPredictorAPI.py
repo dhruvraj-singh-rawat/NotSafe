@@ -16,6 +16,23 @@ CORS(app, resources=r'*', headers='Content-Type')
 def hello():
     return jsonify({"about": "Hello World!"})
 
+def checkForSimilarity(password):
+    filePath = "../AIGeneratedPasswords/"
+    fileName = filePath + "generated.txt"
+    with open(fileName, 'r') as f:    
+        for AIPassword in f:
+            try:
+                print(AIPassword, end='')
+                print(password, end='')
+                if(password == AIPassword):
+                    print("GIVING TRUE")
+                    return True
+                else:
+                    print("GIVING FALSE")
+            except IndexError:
+                print ("A line in the file doesn't have enough entries.")
+        return False
+
 @app.route('/compute-strength', methods=['POST', 'OPTIONS'])
 def compute_password_strength():
     if request.method == 'OPTIONS':
@@ -23,7 +40,8 @@ def compute_password_strength():
     if not request.json or not 'title' in request.json:
         jsonify({'success': "false"})
         password = request.json['password']
-    return jsonify({'success': "true"}), 201
+        isPresent = checkForSimilarity(password)
+    return jsonify({'success': "true", "password": isPresent}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

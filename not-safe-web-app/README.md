@@ -1,4 +1,4 @@
-# react-basic-authentication-example
+# not-safe-web-app
 
 React - Basic HTTP Authentication Tutorial & Example
 
