@@ -18,13 +18,12 @@ def hello():
 
 def checkForSimilarity(password):
     filePath = "../AIGeneratedPasswords/"
-    fileName = filePath + "generated.txt"
+    fileName = filePath + "generated_passwords.txt"
     with open(fileName, 'r') as f:    
         for AIPassword in f:
             try:
-                print(AIPassword, end='')
-                print(password, end='')
-                if(password == AIPassword):
+                strippedAIPassword = AIPassword.strip('\n')
+                if(password == strippedAIPassword):
                     print("GIVING TRUE")
                     return True
                 else:
@@ -41,7 +40,7 @@ def compute_password_strength():
         jsonify({'success': "false"})
         password = request.json['password']
         isPresent = checkForSimilarity(password)
-    return jsonify({'success': "true", "password": isPresent}), 201
+    return jsonify({'success': "true", "isPresent": isPresent}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

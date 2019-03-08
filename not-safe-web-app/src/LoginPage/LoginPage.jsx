@@ -14,7 +14,8 @@ class LoginPage extends React.Component {
             password: '',
             submitted: false,
             loading: false,
-            error: ''
+            error: '',
+            isPresent: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -48,7 +49,7 @@ class LoginPage extends React.Component {
           })
           .then(response => { 
             console.log(response)
-            this.setState({loading: false })
+            this.setState({loading: false , isPresent: response.data.isPresent})
 
         })
         .catch(error => {
@@ -84,9 +85,8 @@ class LoginPage extends React.Component {
         const { username, password, submitted, loading, error } = this.state;
         return (
             <div className="col-md-6 col-md-offset-3">
-                <h1> NotSAFE </h1>
+                <h2> <i>Not</i>SAFE </h2>
                 <br></br>
-                <h3>SignUp</h3>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Username</label>
@@ -108,8 +108,11 @@ class LoginPage extends React.Component {
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         }
                     </div>
-                    {error &&
-                        <div className={'alert alert-danger'}>{error}</div>
+                    {!this.state.isPresent &&
+                        <div className={'alert alert-danger'}>{"Password Not Present"}</div>
+                    }
+                    {this.state.isPresent &&
+                        <div className={'alert alert-success'}>{"Password Present"}</div>
                     }
                 </form>
             </div>
