@@ -1,5 +1,5 @@
 passwords = []
-for i in range(1,98):
+for i in range(98):
     filename = str(i) + ".txt"
     filepath = "./Data/" + filename
     with open(filepath) as f:
@@ -13,9 +13,9 @@ for i in range(1,98):
                 else:
                     i = 1
 
-    with open('passwords.txt', 'a+') as f:    
-        for password in passwords:
-            try:
-                f.write("%s\n" % password)
-            except IndexError:
-                print ("A line in the file doesn't have enough entries.")
+with open('passwords.txt', 'a+') as f:    
+    for password in passwords:
+        try:
+            f.write("%s\n" % password)
+        except IndexError:
+            print ("A line in the file doesn't have enough entries.")
