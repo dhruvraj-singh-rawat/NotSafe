@@ -67,7 +67,7 @@ def compute_password_strength():
         jsonify({'success': "false"})
         password = request.json['password']
         similarityPercentage = checkForSimilarity(password)
-    return jsonify({'success': "true", "similarityPercentage": similarityPercentage}), 201
+    return jsonify({'success': "true", "similarityPercentage": round(similarityPercentage, 2)}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

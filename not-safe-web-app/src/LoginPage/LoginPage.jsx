@@ -15,7 +15,7 @@ class LoginPage extends React.Component {
             submitted: false,
             loading: false,
             error: '',
-            isPresent: false
+            similarityPercentage: 0
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -40,8 +40,6 @@ class LoginPage extends React.Component {
             return;
         }
 
-
-
         this.setState({ loading: true });
 
         axios.post(`http://127.0.0.1:5000/compute-strength`, {
@@ -49,36 +47,14 @@ class LoginPage extends React.Component {
           })
           .then(response => { 
             console.log(response)
-            this.setState({loading: false , isPresent: response.data.isPresent})
-
+            this.setState({loading: false , similarityPercentage: response.data.similarityPercentage})
+            console.log(this.state.similarityPercentage > 0);
+            
         })
         .catch(error => {
             console.log(error.response)
             this.setState({ error, loading: false })
         });
-
-    // return fetch(`http://127.0.0.1:5000/compute-strength`, {
-    //     method: "POST", // *GET, POST, PUT, DELETE, etc.
-    //     mode: "cors", // no-cors, cors, *same-origin
-    //     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-    //     credentials: "same-origin", // include, *same-origin, omit
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //         // "Content-Type": "application/x-www-form-urlencoded",
-    //     },
-    //     redirect: "follow", // manual, *follow, error
-    //     referrer: "no-referrer", // no-referrer, *client
-    //     body: JSON.stringify({username, password}), // body data type must match "Content-Type" header
-    // })
-    // .then(response => response.json()); // parses response to JSON
-    //     userService.login(username, password)
-    //         .then(
-    //             user => {
-    //                 const { from } = this.props.location.state || { from: { pathname: "/" } };
-    //                 this.props.history.push(from);
-    //             },
-    //             error => this.setState({ error, loading: false })
-    //         );
     }
 
     render() {
@@ -108,9 +84,7 @@ class LoginPage extends React.Component {
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         }
                     </div>
-                    {!this.state.isPresent ?
-                        <div className={'alert alert-danger'}>{"Password Not Present"}</div> : <div className={'alert alert-success'}>{"Password Present"}</div>
-                    }
+                    {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <div className={'alert alert-danger'}>{`Password is ${this.state.similarityPercentage}% similar to AI generated dictionary`}</div>:<div className={'alert alert-success'}>{`Password is ${this.state.similarityPercentage}% similar to AI generated dictionary`}</div> )}
                 </form>
             </div>
         );
