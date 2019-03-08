@@ -6,9 +6,7 @@ import axios from 'axios';
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
-
         userService.logout();
-
         this.state = {
             username: '',
             password: '',
@@ -17,7 +15,6 @@ class LoginPage extends React.Component {
             error: '',
             similarityPercentage: 0
         };
-
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -35,8 +32,11 @@ class LoginPage extends React.Component {
         this.setState({ submitted: true });
         const { username, password, returnUrl } = this.state;
 
+        // console.log(password);
+        
+
         // stop here if form is invalid
-        if (!(username && password)) {
+        if (!(password)) {
             return;
         }
 
@@ -45,11 +45,8 @@ class LoginPage extends React.Component {
         axios.post(`http://127.0.0.1:5000/compute-strength`, {
             username, password
           })
-          .then(response => { 
-            console.log(response)
+          .then(response => {
             this.setState({loading: false , similarityPercentage: response.data.similarityPercentage})
-            console.log(this.state.similarityPercentage > 0);
-            
         })
         .catch(error => {
             console.log(error.response)
@@ -64,13 +61,7 @@ class LoginPage extends React.Component {
                 <h2> <i>Not</i>SAFE </h2>
                 <br></br>
                 <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
-                        <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
-                        {submitted && !username &&
-                            <div className="help-block">Username is required</div>
-                        }
-                    </div>
+                    
                     <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
                         <label htmlFor="password">Password</label>
                         <input type="text" className="form-control" name="password" value={password} onChange={this.handleChange} />
@@ -79,12 +70,19 @@ class LoginPage extends React.Component {
                         }
                     </div>
                     <div className="form-group">
-                        <button className="btn btn-primary" disabled={loading}>SignUp</button>
+                        <button className="btn btn-primary" disabled={loading}>Check</button>
                         {loading &&
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         }
                     </div>
-                    {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <div className={'alert alert-danger'}>{`Password is ${this.state.similarityPercentage}% similar to AI generated dictionary`}</div>:<div className={'alert alert-success'}>{`Password is ${this.state.similarityPercentage}% similar to AI generated dictionary`}</div> )}
+
+                    {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <div className={'alert alert-danger'}>{`Password is ${this.state.similarityPercentage}% similar to one of the AI generated passwords`}</div>:<div className={'alert alert-success'}>{`Password is ${this.state.similarityPercentage}% similar to one of the AI generated passwords`}</div> )}
+                    
+
+                    {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <img src="failure.gif" align="middle" height="256" width="256"></img>:<img src="success.gif" align="middle"  height="256" width="256"></img> )}
+
+
+
                 </form>
             </div>
         );
