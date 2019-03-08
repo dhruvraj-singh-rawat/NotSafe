@@ -16,21 +16,48 @@ CORS(app, resources=r'*', headers='Content-Type')
 def hello():
     return jsonify({"about": "Hello World!"})
 
+def lcs(X , Y): 
+# find the length of the strings 
+    m = len(X) 
+    n = len(Y) 
+
+    # declaring the array for storing the dp values 
+    L = [[None]*(n+1) for i in range(m+1)] 
+
+    """Following steps build L[m+1][n+1] in bottom up fashion 
+    Note: L[i][j] contains length of LCS of X[0..i-1] 
+    and Y[0..j-1]"""
+    for i in range(m+1): 
+        for j in range(n+1): 
+            if i == 0 or j == 0 : 
+                L[i][j] = 0
+            elif X[i-1] == Y[j-1]: 
+                L[i][j] = L[i-1][j-1]+1
+            else: 
+                L[i][j] = max(L[i-1][j] , L[i][j-1]) 
+
+    # L[m][n] contains the length of LCS of X[0..n-1] & Y[0..m-1] 
+    return L[m][n] 
+    #end of function lcs 
+
 def checkForSimilarity(password):
     filePath = "../AIGeneratedPasswords/"
     fileName = filePath + "generated_passwords.txt"
+    maxPercentage = 0
     with open(fileName, 'r') as f:    
         for AIPassword in f:
             try:
                 strippedAIPassword = AIPassword.strip('\n')
                 if(password == strippedAIPassword):
                     print("GIVING TRUE")
-                    return True
+                    return 100
                 else:
-                    print("GIVING FALSE")
+                    lcsLength = lcs(password, strippedAIPassword)
+                    similarityPercentage = lcsLength/max(len(password), len(strippedAIPassword))*100
+                    maxPercentage = max(maxPercentage, similarityPercentage)
             except IndexError:
                 print ("A line in the file doesn't have enough entries.")
-        return False
+        return maxPercentage
 
 @app.route('/compute-strength', methods=['POST', 'OPTIONS'])
 def compute_password_strength():
@@ -39,8 +66,8 @@ def compute_password_strength():
     if not request.json or not 'title' in request.json:
         jsonify({'success': "false"})
         password = request.json['password']
-        isPresent = checkForSimilarity(password)
-    return jsonify({'success': "true", "isPresent": isPresent}), 201
+        similarityPercentage = checkForSimilarity(password)
+    return jsonify({'success': "true", "similarityPercentage": similarityPercentage}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
