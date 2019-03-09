@@ -1,17 +1,18 @@
 passwords = []
-for i in range(98):
+for i in range(1):
     filename = str(i) + ".txt"
-    filepath = "./Data/" + filename
+    filepath = "./Dataset/Password List/" + filename
     with open(filepath) as f:
+        start = 0
         for line in f:
             credentials = line.strip().split(':')
-            i = 0
+            j = 0
             for cred in credentials:
-                if(i != 0):
+                if(j!= 0):
                     passwords.append(cred)
-                    i = 0 
+                    j = 0 
                 else:
-                    i = 1
+                    j = 1
 
 with open('passwords.txt', 'a+') as f:    
     for password in passwords:

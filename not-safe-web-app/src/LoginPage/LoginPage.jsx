@@ -77,8 +77,6 @@ class LoginPage extends React.Component {
                     </div>
 
                     {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <div className={'alert alert-danger'}>{`Password is ${this.state.similarityPercentage}% similar to one of the AI generated passwords`}</div>:<div className={'alert alert-success'}>{`Password is ${this.state.similarityPercentage}% similar to one of the AI generated passwords`}</div> )}
-                    
-
                     {this.state.similarityPercentage > 0 && (this.state.similarityPercentage > 70 ? <img src="failure.gif" align="middle" height="256" width="256"></img>:<img src="success.gif" align="middle"  height="256" width="256"></img> )}
 
 
